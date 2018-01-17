@@ -116,8 +116,19 @@ def breadthFirstSearch(problem):
 
 def uniformCostSearch(problem):
 	"Search the node of least total cost first. "
-	"*** YOUR CODE HERE ***"
-	util.raiseNotDefined()
+	frontier = util.PriorityQueue()
+	frontier.push((problem.getStartState(), []), 0)
+	explored = []
+	while not frontier.isEmpty():
+		node, path = frontier.pop()
+		if problem.isGoalState(node):
+			return path
+		explored.append(node)
+		for coords, action, cost in problem.getSuccessors(node):
+			if coords not in explored:
+				total_cost = problem.getCostOfActions(path + [action]) + cost
+				frontier.push((coords, path + [action]), total_cost)
+	return None
 
 def nullHeuristic(state, problem=None):
 	"""
@@ -128,8 +139,18 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
 	"Search the node that has the lowest combined cost and heuristic first."
-	"*** YOUR CODE HERE ***"
-	util.raiseNotDefined()
+	frontier = util.PriorityQueue()
+	frontier.push((problem.getStartState(), []), heuristic(problem.getStartState(), problem))
+	explored = []
+	while not frontier.isEmpty():
+		node, path = frontier.pop()
+		if problem.isGoalState(node):
+			return path
+		explored.append(node)
+		for coords, action, cost in problem.getSuccessors(node):
+			if coords not in explored:
+				frontier.push((coords, path + [action]), heuristic(coords, problem))
+	return None
 	
 	
 # Abbreviations
